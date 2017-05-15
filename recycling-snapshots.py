@@ -74,15 +74,15 @@ if __name__ == "__main__":
             logger.info("In rule %s volume %s found %s snapshots", rule["Name"], target["VolumeID"], len(snapshots))
 
             for snapshot in snapshots:
-                rsebs.tag_snapshot(snapshot, rule["Name"])
                 diff = abs(today.date() - snapshot["StartTime"].date()).days
                 if diff >= args.days:
-                    
                     if args.dry is False:
                         logger.warning("Snapshot %s date %s deleted", snapshot["SnapshotId"], snapshot["StartTime"])
                         snapshot["oSnapshot"].delete(DryRun=False)
                     else:
                         logger.warning("Snapshot %s date %s will be delete", snapshot["SnapshotId"], snapshot["StartTime"])
+                else:
+                    rsebs.tag_snapshot(snapshot, rule["Name"])
 
 
 
