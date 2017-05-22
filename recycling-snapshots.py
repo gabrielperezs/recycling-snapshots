@@ -32,7 +32,17 @@ if __name__ == "__main__":
     parser.add_argument('--no-dry', dest='dry', action='store_false',
                         help='run in real mode. CHANGES WILL BE APPLY.')
 
+    parser.add_argument('--verbose', type=int, required=False, default=1,
+                        help='Verbose level - Critical: 0, Info: 1, Debug: 2)')
+
     args = parser.parse_args()
+
+    if args.verbose == 0:
+        logger.setLevel(logging.CRITICAL)
+    elif args.verbose == 1:
+        logger.setLevel(logging.INFO)
+    elif args.verbose >= 2:
+        logger.setLevel(logging.DEBUG)
     
     if args.profile == "":
         boto3.setup_default_session()
@@ -61,7 +71,6 @@ if __name__ == "__main__":
         targets = rsevents.get_targets(rule["Name"])
 
         if not targets:
-            logger.warning("No targets found in rule %s", rule["Name"])
             continue
 
         logger.debug("In %s we found %s targets", rule["Name"], len(targets))
@@ -71,7 +80,6 @@ if __name__ == "__main__":
             snapshots = rsebs.get_snapshots(target["VolumeID"])
 
             if not snapshots:
-                logger.warning("No snapshots found for the Volume %s in rule %s", target["VolumeID"], rule["Name"])
                 continue
 
             logger.info("In rule %s volume %s found %s snapshots", rule["Name"], target["VolumeID"], len(snapshots))
