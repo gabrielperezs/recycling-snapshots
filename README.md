@@ -31,6 +31,7 @@ optional arguments:
   --days DAYS        remove snapshots older than X days
   --dry DRY          dry run (by default)
   --no-dry           run in real mode. CHANGES WILL BE APPLY.
+  --verbose          Verbose level - Critical: 0, Info: 1, Debug: 2. Default: 1
 
 NOTE: by default will run in DRY mode
 ```
