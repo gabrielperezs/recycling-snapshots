@@ -78,20 +78,26 @@ def tag_snapshot(snapshot, name):
     if "oVolume" not in snapshot:
         snapshot["oVolume"] = ec2.Volume(snapshot["VolumeId"])
 
-    _tags = [
-        {
-            'Key': 'Name',
-            'Value': "Backup: {}".format(name),
-        },
-        {
+    _tags = [{
+        'Key': 'Name',
+        'Value': "Backup: {}".format(name),
+    }]
+
+    if len(snapshot["oVolume"].attachments) > 0:
+        _tags.append({
             'Key': "Device",
             'Value': "{}".format(snapshot["oVolume"].attachments[0]["Device"]),
-        },
-        {
-            'Key': 'recyclable',
-            'Value': "True",
-        },
-    ]
+        })
+    else:
+        _tags.append({
+            'Key': "Device",
+            'Value': "unknown",
+        })
+
+    _tags.append({
+        'Key': 'recyclable',
+        'Value': "True",
+    })
 
     if dry is False:
         tag = snapshot["oSnapshot"].create_tags(DryRun=False, Tags=_tags)
