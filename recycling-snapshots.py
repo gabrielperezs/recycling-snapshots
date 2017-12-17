@@ -76,6 +76,10 @@ if __name__ == "__main__":
         logger.debug("In %s we found %s targets", rule["Name"], len(targets))
 
         for target in targets:
+            if "VolumeID" not in target:
+                logger.warning("The volume %s (%s) don't have VolumeID", target['Input'], target['Arn'])
+                continue
+
             logger.debug("Target found %s", target["VolumeID"])
             snapshots = rsebs.get_snapshots(target["VolumeID"])
 
