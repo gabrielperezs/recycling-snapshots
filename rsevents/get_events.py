@@ -38,13 +38,18 @@ def get_targets(rule=False):
     for tID, target in enumerate(response["Targets"]):
         
         # We keep just EBS snapshots targets
-        if "EBSCreateSnapshot" not in response["Targets"][tID]["Arn"]:
+        if "EBSCreateSnapshot" not in response["Targets"][tID]["Arn"] and "target/create-snapshot" not in response["Targets"][tID]["Arn"]:
             del response["Targets"][tID]
             continue
 
         # Save the volume ID
-        volume = target["Input"].split("/")
-        if volume[0][-6:] == "volume":
-            response["Targets"][tID]["VolumeID"] = volume[1][:-1]
+        if target["Input"][1:4] == "vol":
+            volume = target["Input"][1:-1]
+        else:
+            s = target["Input"].split("/")
+            if s[1][:3] == "vol":
+                volume = s[1][:-1]
+
+        response["Targets"][tID]["VolumeID"] = volume
 
     return response["Targets"]
