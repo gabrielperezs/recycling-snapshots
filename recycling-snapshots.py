@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
         for target in targets:
             if "VolumeID" not in target:
-                logger.warning("The volume %s (%s) don't have VolumeID", target['Input'], target['Arn'])
+                logger.warning("Invalid target: %s", target)
                 continue
 
             logger.debug("Target found %s", target["VolumeID"])

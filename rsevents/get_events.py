@@ -2,8 +2,8 @@ import boto3
 import logging
 
 logger = logging.getLogger(__package__)
-
 client = None
+
 
 def set_client():
     global client
@@ -19,7 +19,6 @@ def get_rules():
     if len(rules["Rules"]) == 0:
         logger.error("Don't exists rules in this account")
         return False
-
 
     return rules["Rules"]
 

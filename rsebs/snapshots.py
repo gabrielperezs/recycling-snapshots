@@ -7,14 +7,16 @@ dry = True
 client = None
 ec2 = None
 
+
 def set_drymode():
     global dry
     dry = True
 
+
 def unset_drymode():
     global dry
     dry = False
-    
+
 
 def set_client():
     """Define global variables to use the same API connection"""
@@ -22,17 +24,18 @@ def set_client():
     client = boto3.client('ec2')
     ec2 = boto3.resource('ec2')
 
+
 def get_snapshots(volume_id=False):
     """Get list of snapshots filter by the volume_id"""
     response = client.describe_snapshots(
         Filters=[
             {
                 'Name': 'volume-id',
-                'Values': [volume_id,]
+                'Values': [volume_id, ]
             },
             {
                 'Name': 'status',
-                'Values': ['completed',]
+                'Values': ['completed', ]
             }
         ],
     )
@@ -51,7 +54,6 @@ def get_snapshots(volume_id=False):
         snapshot["oSnapshot"] = ec2.Snapshot(snapshot["SnapshotId"])
 
         snapshots.append(snapshot)
-
 
     return snapshots
 
@@ -107,4 +109,3 @@ def tag_snapshot(snapshot, name):
                 "Name",
                 "Backup: {}".format(_tags),
                 dry)
-    
